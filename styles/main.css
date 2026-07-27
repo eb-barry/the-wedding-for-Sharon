@@ -1,0 +1,266 @@
+/* Sharon's Wedding Gallery — mobile-first PWA styles */
+
+:root {
+  color-scheme: dark;
+  --bg: #1a1210;
+  --card: rgba(28, 18, 16, 0.78);
+  --text: #fff8f2;
+  --muted: rgba(255, 248, 242, 0.78);
+  --accent: #b76e79;
+  --accent-2: #d4af37;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "PingFang TC", "Noto Sans TC", "Helvetica Neue", sans-serif;
+}
+
+body {
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+#app,
+.app-shell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.welcome-screen,
+.loading-screen,
+.gyro-prompt,
+.tour-screen {
+  position: absolute;
+  inset: 0;
+}
+
+.welcome-screen {
+  display: grid;
+  place-items: end center;
+  overflow: hidden;
+}
+
+.welcome-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.welcome-card {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 420px);
+  margin: 0 0 calc(24px + var(--safe-bottom));
+  padding: 22px 20px 18px;
+  border-radius: 22px;
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.welcome-title {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #ffe8c8;
+}
+
+.welcome-body {
+  margin: 0 0 18px;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--muted);
+  white-space: normal;
+}
+
+.welcome-start-btn,
+.primary-btn,
+.secondary-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  min-height: 48px;
+  padding: 0 22px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.welcome-start-btn,
+.primary-btn {
+  width: 100%;
+  color: #1a1210;
+  background: linear-gradient(135deg, #f0d38a, var(--accent-2));
+}
+
+.secondary-btn {
+  width: 100%;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.loading-screen,
+.gyro-prompt {
+  display: grid;
+  place-items: center;
+  background: rgba(18, 12, 10, 0.92);
+  padding: 24px;
+}
+
+.loading-card,
+.gyro-prompt-card {
+  width: min(92vw, 380px);
+  padding: 22px 20px;
+  border-radius: 20px;
+  background: rgba(40, 26, 22, 0.95);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.loading-title,
+.gyro-prompt-card h2 {
+  margin: 0 0 14px;
+  font-size: 1.2rem;
+}
+
+.loading-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.loading-bar > span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.2s ease;
+}
+
+.loading-text,
+.gyro-prompt-card p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.gyro-prompt-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.tour-screen {
+  background: #10141a;
+}
+
+.tour-stage,
+.tour-stage .gallery3d-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.tour-hud {
+  position: absolute;
+  top: calc(12px + var(--safe-top));
+  left: calc(12px + var(--safe-left));
+  right: calc(12px + var(--safe-right));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.tour-room-label {
+  pointer-events: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.tour-controls {
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.hud-btn {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.48);
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.hud-btn:active {
+  transform: scale(0.96);
+}
+
+.tour-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(16px + var(--safe-bottom));
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: min(92vw, 420px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 248, 242, 0.88);
+  font-size: 0.82rem;
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@media (min-width: 900px) {
+  .welcome-card {
+    margin-bottom: 48px;
+  }
+
+  .welcome-title {
+    font-size: 1.6rem;
+  }
+}
