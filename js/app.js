@@ -249,8 +249,8 @@ async function startTour(){
   const hint = document.getElementById("tourHint");
   if (hint) {
     hint.textContent = gyroEnabled
-      ? "轉動手機環顧 · 點地板前進 · 點門換展間"
-      : "拖曳環顧 · 點地板前進 · 點門換展間";
+      ? "轉動手機環顧 · 點照片放大 · 再點退回 · 點門換展間"
+      : "拖曳環顧 · 點照片放大 · 再點退回 · 點門換展間";
   }
 }
 
