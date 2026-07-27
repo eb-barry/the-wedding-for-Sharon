@@ -1305,12 +1305,13 @@ export class Gallery3DScene {
     return delta;
   }
 
-  _animateCameraPose(targetPosition, yaw, pitch, duration){
+  _animateCameraPose(targetPosition, yaw, pitch, duration, options = {}){
     this._cancelCameraAnimation();
     const startPos = this.camera.position.clone();
     const startYaw = this.controls.yaw;
     const startPitch = this.controls.pitch;
     const yawDelta = this._shortestAngleDelta(startYaw, yaw);
+    const onComplete = options.onComplete;
     const startTime = performance.now();
     this._cameraAnimating = true;
     const step = now => {
@@ -1324,7 +1325,7 @@ export class Gallery3DScene {
         this._cameraTween = requestAnimationFrame(step);
       } else {
         this.controls.setOrientation(yaw, pitch);
-        this._finishCameraAnimation();
+        this._finishCameraAnimation(onComplete);
       }
     };
     this._cameraTween = requestAnimationFrame(step);
@@ -1344,17 +1345,23 @@ export class Gallery3DScene {
     this.camera.fov = 68;
     this.camera.updateProjectionMatrix();
 
-    const target = {
-      x: pose.x,
-      y: pose.y,
-      z: pose.z
-    };
+    const target = { x: pose.x, y: pose.y, z: pose.z };
+    const restoreGyro = this.controls.gyroEnabled;
+    if (restoreGyro) this.controls.disableGyro();
+    this.controls.locked = true;
 
-    if (this.controls.gyroEnabled) {
-      this.controls._orientBaseline = null;
-    }
-
-    this._animateCameraPose(target, pose.yaw, pose.pitch, 650);
+    this._animateCameraPose(target, pose.yaw, pose.pitch, 650, {
+      onComplete: () => {
+        this.controls.locked = false;
+        if (restoreGyro) {
+          this.controls.enableGyro().then(() => {
+            this.controls._orientBaseline = null;
+          }).catch(() => {});
+        } else if (this.controls.gyroEnabled) {
+          this.controls._orientBaseline = null;
+        }
+      }
+    });
   }
 
   start(){
