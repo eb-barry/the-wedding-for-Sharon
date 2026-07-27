@@ -19,13 +19,13 @@ assets/
   photos/
     room-01/
       manifest.json           # 列出該房照片檔名與順序
-      01.webp … 18.webp       # 建議每房 16–18 張
+      room-01-01.webp … room-01-18.webp   # 建議每房 16–18 張
     room-02/
       manifest.json
-      …
+      room-02-01.webp …
     room-03/
       manifest.json
-      …
+      room-03-01.webp …
   textures/
     floors/
       floor-01.webp           # → room-01
@@ -57,9 +57,9 @@ assets/
 {
   "roomId": "room-01",
   "items": [
-    "01.webp",
-    "02.webp",
-    "03.webp"
+    "room-01-01.webp",
+    "room-01-02.webp",
+    "room-01-03.webp"
   ]
 }
 ```
