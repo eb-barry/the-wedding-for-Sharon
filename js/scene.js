@@ -12,6 +12,7 @@ import {
   getRoomDefinition,
   getRoundWallInwardNormal,
   getSpawnPose,
+  getRoomCenterViewPose,
   getWallInwardNormal
 } from "./rooms.js";
 import { bakeFramedTexture } from "./frames.js";
@@ -1339,15 +1340,21 @@ export class Gallery3DScene {
 
   resetView(){
     this._clearPhotoFocusState();
-    const spawn = getSpawnPose(this.currentRoomId, this._entryFromRoomId);
+    const pose = getRoomCenterViewPose(this.currentRoomId);
     this.camera.fov = 68;
     this.camera.updateProjectionMatrix();
-    this.camera.position.set(spawn.x, spawn.y, spawn.z);
-    this.controls.resetView();
-    this.controls.setOrientation(spawn.yaw, 0);
+
+    const target = {
+      x: pose.x,
+      y: pose.y,
+      z: pose.z
+    };
+
     if (this.controls.gyroEnabled) {
       this.controls._orientBaseline = null;
     }
+
+    this._animateCameraPose(target, pose.yaw, pose.pitch, 650);
   }
 
   start(){
