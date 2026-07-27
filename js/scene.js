@@ -1143,12 +1143,18 @@ export class Gallery3DScene {
 
   _exitPhotoFocus({ keepView = true } = {}){
     if (!this._focusedPhotoId) return;
-    const returnPosition = this._focusReturnPosition
-      ? this._focusReturnPosition.clone()
-      : this.camera.position.clone().addScaledVector(
-        this.camera.getWorldDirection(this._tmpLook).setY(0).normalize().multiplyScalar(-1),
-        WALL_STEP_BACK_DISTANCE
-      );
+
+    let returnPosition;
+    if (this._focusReturnPosition) {
+      returnPosition = this._focusReturnPosition.clone();
+    } else {
+      const back = new THREE.Vector3();
+      this.camera.getWorldDirection(back);
+      back.y = 0;
+      if (back.lengthSq() < 0.0001) back.set(0, 0, 1);
+      back.normalize().multiplyScalar(-WALL_STEP_BACK_DISTANCE);
+      returnPosition = this.camera.position.clone().add(back);
+    }
 
     this._clampCameraToRoom(returnPosition);
     returnPosition.y = EYE_HEIGHT;
@@ -1159,16 +1165,12 @@ export class Gallery3DScene {
     this._focusReturnPosition = null;
 
     if (keepView) {
-      this._animateCameraPosition(returnPosition, 550, {
-        onComplete: () => this._lockFocusLook(false)
-      });
-      // Keep current yaw/pitch unchanged while retreating.
       this.controls.setOrientation(yaw, pitch);
-    } else {
-      this._animateCameraPosition(returnPosition, 550, {
-        onComplete: () => this._lockFocusLook(false)
-      });
     }
+
+    this._animateCameraPosition(returnPosition, 550, {
+      onComplete: () => this._lockFocusLook(false)
+    });
   }
 
   _lockFocusLook(locked){
