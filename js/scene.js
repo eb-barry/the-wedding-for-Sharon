@@ -1112,10 +1112,13 @@ export class Gallery3DScene {
     position.y = this._focusTarget.y;
     this._clampCameraToRoom(position);
 
+    // Three.js cameras look down -Z at yaw=0, so forward is
+    // (-sin(yaw), *, -cos(yaw)). Match that when aiming at the artwork.
     this._tmpLook.copy(this._focusTarget).sub(position);
-    const yaw = Math.atan2(this._tmpLook.x, this._tmpLook.z);
+    const yaw = Math.atan2(-this._tmpLook.x, -this._tmpLook.z);
     const planar = Math.hypot(this._tmpLook.x, this._tmpLook.z) || 0.0001;
-    const pitch = THREE.MathUtils.clamp(Math.atan2(this._tmpLook.y, planar), -0.65, 0.65);
+    // Positive camera pitch tips the nose down; invert look.y accordingly.
+    const pitch = THREE.MathUtils.clamp(Math.atan2(-this._tmpLook.y, planar), -0.65, 0.65);
 
     return { position, yaw, pitch, target: this._focusTarget.clone() };
   }
@@ -1204,7 +1207,7 @@ export class Gallery3DScene {
     this.camera.getWorldDirection(forward);
     forward.y = 0;
     if (forward.lengthSq() < 0.0001) {
-      forward.set(Math.sin(this.controls.yaw), 0, Math.cos(this.controls.yaw));
+      forward.set(-Math.sin(this.controls.yaw), 0, -Math.cos(this.controls.yaw));
     }
     forward.normalize();
 
@@ -1281,23 +1284,32 @@ export class Gallery3DScene {
     this._cameraTween = requestAnimationFrame(step);
   }
 
+  _shortestAngleDelta(from, to){
+    let delta = to - from;
+    while (delta > Math.PI) delta -= Math.PI * 2;
+    while (delta < -Math.PI) delta += Math.PI * 2;
+    return delta;
+  }
+
   _animateCameraPose(targetPosition, yaw, pitch, duration){
     this._cancelCameraAnimation();
     const startPos = this.camera.position.clone();
     const startYaw = this.controls.yaw;
     const startPitch = this.controls.pitch;
+    const yawDelta = this._shortestAngleDelta(startYaw, yaw);
     const startTime = performance.now();
     this._cameraAnimating = true;
     const step = now => {
       const t = Math.min(1, (now - startTime) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
       this.camera.position.lerpVectors(startPos, targetPosition, eased);
-      const nextYaw = THREE.MathUtils.lerp(startYaw, yaw, eased);
+      const nextYaw = startYaw + yawDelta * eased;
       const nextPitch = THREE.MathUtils.lerp(startPitch, pitch, eased);
       this.controls.setOrientation(nextYaw, nextPitch);
       if (t < 1) {
         this._cameraTween = requestAnimationFrame(step);
       } else {
+        this.controls.setOrientation(yaw, pitch);
         this._finishCameraAnimation();
       }
     };
