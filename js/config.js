@@ -11,6 +11,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-01",
     floorId: "floor-01",
     wallId: "wall-01",
+    ceilingId: "C0-01",
     outerFrameId: "classic-01",
     innerFrameId: "inner-01",
     doors: {
@@ -21,6 +22,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-02",
     floorId: "floor-02",
     wallId: "wall-02",
+    ceilingId: "C0-02",
     outerFrameId: "classic-02",
     innerFrameId: "inner-02",
     doors: {
@@ -32,6 +34,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-03",
     floorId: "floor-03",
     wallId: "wall-03",
+    ceilingId: "C0-03",
     outerFrameId: "classic-03",
     innerFrameId: "inner-03",
     doors: {
@@ -43,6 +46,7 @@ export const ROOM_MATERIALS = {
 export const TEXTURE_PATHS = {
   floors: `${ASSET_ROOT}/textures/floors`,
   walls: `${ASSET_ROOT}/textures/walls`,
+  ceilings: `${ASSET_ROOT}/textures/ceilings`,
   doors: `${ASSET_ROOT}/textures/doors`,
   frames: `${ASSET_ROOT}/textures/frames`,
   photos: `${ASSET_ROOT}/photos`,

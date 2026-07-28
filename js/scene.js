@@ -469,19 +469,22 @@ export class Gallery3DScene {
     this._clickables.push(mesh);
   }
 
-  _applySurfaceMaterials(surfaceTextures, wallMeshes, floorMesh, options = {}){
+  _applySurfaceMaterials(surfaceTextures, wallMeshes, floorMesh, ceilingMesh, options = {}){
     if (!surfaceTextures) return;
     const { wallRepeatScale = 1, unlitWalls = false, wallRepeat } = options;
-    const { wallCanvas, floorCanvas } = surfaceTextures;
+    const { wallCanvas, floorCanvas, ceilingCanvas } = surfaceTextures;
     const wallRepeatX = wallRepeat?.x ?? Math.max(1.5, 4 * wallRepeatScale);
     const wallRepeatY = wallRepeat?.y ?? Math.max(1, ROOM_WALL_HEIGHT / 2.2);
+    const surfaceRepeat = Math.max(2, 6 * wallRepeatScale);
     const wallTexture = createSurfaceTexture(wallCanvas, wallRepeatX, wallRepeatY);
-    const floorTexture = createSurfaceTexture(
-      floorCanvas,
-      Math.max(2, 6 * wallRepeatScale),
-      Math.max(2, 6 * wallRepeatScale)
-    );
-    this._roomTextures.push(wallTexture, floorTexture);
+    const floorTexture = createSurfaceTexture(floorCanvas, surfaceRepeat, surfaceRepeat);
+    const texturesToTrack = [wallTexture, floorTexture];
+    let ceilingTexture = null;
+    if (ceilingCanvas) {
+      ceilingTexture = createSurfaceTexture(ceilingCanvas, surfaceRepeat, surfaceRepeat);
+      texturesToTrack.push(ceilingTexture);
+    }
+    this._roomTextures.push(...texturesToTrack);
 
     const wallMaterial = unlitWalls
       ? new THREE.MeshBasicMaterial({ map: wallTexture, side: THREE.DoubleSide })
@@ -502,6 +505,16 @@ export class Gallery3DScene {
         map: floorTexture,
         roughness: 0.84,
         metalness: 0.04
+      });
+    }
+
+    if (ceilingMesh && ceilingTexture) {
+      ceilingMesh.material = new THREE.MeshStandardMaterial({
+        map: ceilingTexture,
+        roughness: 0.92,
+        metalness: 0.02,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.18
       });
     }
   }
@@ -552,7 +565,7 @@ export class Gallery3DScene {
       }
     });
 
-    this._applySurfaceMaterials(surfaceTextures, wallMeshes, floor, {
+    this._applySurfaceMaterials(surfaceTextures, wallMeshes, floor, ceiling, {
       wallRepeatScale: 1,
       unlitWalls: true
     });
@@ -709,7 +722,7 @@ export class Gallery3DScene {
     });
 
     const circumference = 2 * Math.PI * radius;
-    this._applySurfaceMaterials(surfaceTextures, [wall], floor, {
+    this._applySurfaceMaterials(surfaceTextures, [wall], floor, ceiling, {
       wallRepeatScale: 1.2,
       unlitWalls: true,
       wallRepeat: {

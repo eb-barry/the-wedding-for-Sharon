@@ -26,15 +26,18 @@ export async function loadTextureImage(kind, textureId){
 
 export async function resolveRoomSurfaceTextures(roomId){
   const materials = ROOM_MATERIALS[Number(roomId)] || ROOM_MATERIALS[1];
-  const [wallImage, floorImage] = await Promise.all([
+  const [wallImage, floorImage, ceilingImage] = await Promise.all([
     loadTextureImage("walls", materials.wallId),
-    loadTextureImage("floors", materials.floorId)
+    loadTextureImage("floors", materials.floorId),
+    loadTextureImage("ceilings", materials.ceilingId)
   ]);
   return {
     wallCanvas: imageToCanvas(wallImage),
     floorCanvas: imageToCanvas(floorImage),
+    ceilingCanvas: imageToCanvas(ceilingImage),
     wallAspect: (wallImage.width || 1) / (wallImage.height || 1),
-    floorAspect: (floorImage.width || 1) / (floorImage.height || 1)
+    floorAspect: (floorImage.width || 1) / (floorImage.height || 1),
+    ceilingAspect: (ceilingImage.width || 1) / (ceilingImage.height || 1)
   };
 }
 
@@ -78,12 +81,13 @@ function imageToCanvas(image){
 
 function createProceduralTextureCanvas(kind, textureId){
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = kind === "doors" ? 1024 : 512;
+  canvas.width = kind === "ceilings" ? 1024 : 512;
+  canvas.height = kind === "doors" ? 1024 : canvas.width;
   const ctx = canvas.getContext("2d");
   const colors = {
     floors: "#8B7355",
     walls: "#F5F0E8",
+    ceilings: "#ECE7DE",
     doors: "#6B4F3A"
   };
   ctx.fillStyle = colors[kind] || "#999";
