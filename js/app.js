@@ -85,7 +85,9 @@ function renderShell(){
         <div class="tour-hud">
           <div class="tour-room-label" id="roomLabel">展間 1</div>
           <div class="tour-controls">
-            <button type="button" class="hud-btn" id="resetViewBtn" aria-label="重設視角" title="重設視角">↻</button>
+            <button type="button" class="hud-btn hud-btn-icon" id="resetViewBtn" aria-label="回到房間中心" title="回到房間中心">
+              <img src="./assets/icons/icon-gps.webp" alt="" width="26" height="26" decoding="async" />
+            </button>
             <button type="button" class="hud-btn" id="muteBtn" aria-label="靜音" title="靜音" aria-pressed="false">🔊</button>
           </div>
         </div>

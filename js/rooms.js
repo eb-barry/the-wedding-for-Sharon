@@ -62,6 +62,33 @@ export function getSpawnPose(roomId, fromRoomId = null){
   return { x: 0, y: EYE_HEIGHT, z: -radius, yaw: 0 };
 }
 
+/**
+ * Center of the current room, facing a photo wall.
+ * Pitch aims slightly below artwork center so photos sit a bit above screen center.
+ */
+export function getRoomCenterViewPose(roomId){
+  const room = getRoomDefinition(roomId);
+  const hangY = 2.2;
+  // Aim a little below photo center → photos appear slightly above mid-screen.
+  const lookY = hangY - 0.18;
+  const yaw = room.shape === "round"
+    ? -Math.PI / 2 // face open arc between east/west doors
+    : Math.PI;     // face north wall (no doorway in square rooms)
+
+  const wallDistance = room.shape === "round"
+    ? ROUND_ROOM_RADIUS - 0.25
+    : (SQUARE_ROOM_SIZE / 2) - 0.25;
+  const pitch = Math.atan2(lookY - EYE_HEIGHT, wallDistance);
+
+  return {
+    x: 0,
+    y: EYE_HEIGHT,
+    z: 0,
+    yaw,
+    pitch
+  };
+}
+
 export function getWallInwardNormal(side){
   switch (side) {
     case "north": return { x: 0, y: 0, z: 1 };
