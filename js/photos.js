@@ -16,8 +16,12 @@ export async function loadAllRoomPhotos(onProgress){
     for (let index = 0; index < items.length; index += 1) {
       const file = items[index];
       const url = `${TEXTURE_PATHS.photos}/${roomKey}/${encodeURIComponent(file)}`;
-      const photo = await preparePhotoFromUrl(url, `${roomKey}-${file}`);
-      photos.push({ ...photo, roomId });
+      try {
+        const photo = await preparePhotoFromUrl(url, `${roomKey}-${file}`);
+        photos.push({ ...photo, roomId });
+      } catch (error) {
+        console.warn(`[Wedding Gallery] 略過無法載入的照片：${url}`, error);
+      }
       loaded += 1;
       onProgress?.(loaded, Math.max(total, loaded), `載入 ${roomKey} 照片…`);
     }
