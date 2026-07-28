@@ -105,10 +105,30 @@ function setLoadingProgress(current, total, message){
   if (text) text.textContent = message || `載入中 ${Math.round(ratio * 100)}%`;
 }
 
+function setAppPhase(phase){
+  const welcome = document.getElementById("welcomeScreen");
+  const welcomeCard = welcome?.querySelector(".welcome-card");
+  const loading = document.getElementById("loadingScreen");
+  const gyro = document.getElementById("gyroPrompt");
+  const tour = document.getElementById("tourScreen");
+
+  const keepWelcomeBackdrop = phase === "loading" || phase === "gyro";
+
+  welcome?.classList.toggle("hidden", phase === "tour");
+  welcome?.classList.toggle("is-backdrop", keepWelcomeBackdrop);
+  welcomeCard?.classList.toggle("hidden", keepWelcomeBackdrop);
+
+  loading?.classList.toggle("hidden", phase !== "loading");
+  gyro?.classList.toggle("hidden", phase !== "gyro");
+  tour?.classList.toggle("hidden", phase !== "tour");
+}
+
+/** @deprecated use setAppPhase */
 function showOnly(id){
-  ["welcomeScreen", "loadingScreen", "gyroPrompt", "tourScreen"].forEach(screenId => {
-    document.getElementById(screenId)?.classList.toggle("hidden", screenId !== id);
-  });
+  if (id === "welcomeScreen") setAppPhase("welcome");
+  else if (id === "loadingScreen") setAppPhase("loading");
+  else if (id === "gyroPrompt") setAppPhase("gyro");
+  else if (id === "tourScreen") setAppPhase("tour");
 }
 
 function updateMuteButton(){
@@ -195,7 +215,7 @@ async function enableGyroFlow(){
   }
 
   if (needsGyroPermissionPrompt()) {
-    showOnly("gyroPrompt");
+    setAppPhase("gyro");
     return new Promise(resolve => {
       const allowBtn = document.getElementById("gyroAllowBtn");
       const skipBtn = document.getElementById("gyroSkipBtn");
@@ -226,7 +246,7 @@ async function enableGyroFlow(){
 }
 
 async function startTour(){
-  showOnly("loadingScreen");
+  setAppPhase("loading");
   setLoadingProgress(0, 1, "載入材質與照片…");
 
   await audio.start();
@@ -244,7 +264,8 @@ async function startTour(){
   await ensureScene();
   await enableGyroFlow();
 
-  showOnly("tourScreen");
+  // Leave the welcome backdrop only after gyro choice (or when gyro is not required).
+  setAppPhase("tour");
   sessionReady = true;
   await loadActiveRoom(1, null);
 
@@ -261,7 +282,7 @@ function bindEvents(){
     startTour().catch(error => {
       console.error(error);
       alert("展館載入失敗，請重新整理後再試一次。");
-      showOnly("welcomeScreen");
+      setAppPhase("welcome");
     });
   });
 

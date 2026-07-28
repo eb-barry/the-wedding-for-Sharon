@@ -58,6 +58,11 @@ body {
   display: grid;
   place-items: end center;
   overflow: hidden;
+  z-index: 1;
+}
+
+.welcome-screen.is-backdrop {
+  place-items: center;
 }
 
 .welcome-image {
@@ -127,8 +132,9 @@ body {
 .gyro-prompt {
   display: grid;
   place-items: center;
-  background: rgba(18, 12, 10, 0.92);
+  background: rgba(18, 12, 10, 0.28);
   padding: 24px;
+  z-index: 3;
 }
 
 .loading-card,
