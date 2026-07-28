@@ -31,6 +31,10 @@ assets/
       floor-01.webp           # → room-01
       floor-02.webp           # → room-02
       floor-03.webp           # → room-03
+    ceilings/
+      ceiling-01.webp         # → room-01（建議 1024×1024；來源可為 C0-01）
+      ceiling-02.webp         # → room-02（來源可為 C0-02）
+      ceiling-03.webp         # → room-03（來源可為 C0-03）
     walls/
       wall-01.webp
       wall-02.webp
@@ -71,13 +75,13 @@ assets/
 
 ## 固定材質對應
 
-| 展間 | 地板 | 牆 | 外框 | 內框 | 門 |
-|------|------|----|------|------|----|
-| room-01 | floor-01 | wall-01 | classic-01 | inner-01 | door-01 |
-| room-02 | floor-02 | wall-02 | classic-02 | inner-02 | door-02-1、door-02-2 |
-| room-03 | floor-03 | wall-03 | classic-03 | inner-03 | door-03 |
+| 展間 | 地板 | 天花板 | 牆 | 外框 | 內框 | 門 |
+|------|------|--------|----|------|------|----|
+| room-01 | floor-01 | ceiling-01 | wall-01 | classic-01 | inner-01 | door-01 |
+| room-02 | floor-02 | ceiling-02 | wall-02 | classic-02 | inner-02 | door-02-1、door-02-2 |
+| room-03 | floor-03 | ceiling-03 | wall-03 | classic-03 | inner-03 | door-03 |
 
-對應程式：`js/config.js` 的 `ROOM_MATERIALS`。
+對應程式：`js/config.js` 的 `ROOM_MATERIALS`。天花板檔請放在 `assets/textures/ceilings/`。
 
 ## Welcome 文案
 
