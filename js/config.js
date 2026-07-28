@@ -11,7 +11,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-01",
     floorId: "floor-01",
     wallId: "wall-01",
-    ceilingId: "C0-01",
+    ceilingId: "ceiling-01",
     outerFrameId: "classic-01",
     innerFrameId: "inner-01",
     doors: {
@@ -22,7 +22,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-02",
     floorId: "floor-02",
     wallId: "wall-02",
-    ceilingId: "C0-02",
+    ceilingId: "ceiling-02",
     outerFrameId: "classic-02",
     innerFrameId: "inner-02",
     doors: {
@@ -34,7 +34,7 @@ export const ROOM_MATERIALS = {
     roomKey: "room-03",
     floorId: "floor-03",
     wallId: "wall-03",
-    ceilingId: "C0-03",
+    ceilingId: "ceiling-03",
     outerFrameId: "classic-03",
     innerFrameId: "inner-03",
     doors: {
